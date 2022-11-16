@@ -1,4 +1,5 @@
 import React from 'react'
+import Help from './Help'
 
 function App() {
 	const [data, setData] = React.useState()
@@ -45,6 +46,8 @@ function App() {
 	}, [networkIndicator])
 
 	const handleChange = (evt) => {
+		console.log('triggered')
+		console.log(evt)
 		const value = parseInt(evt.target.value)
 		setFormData({
 			...formData,
@@ -77,10 +80,10 @@ function App() {
 				padding: 40,
 			}}
 		>
-			<h1 style={{ marginBottom: 50 }} align='center'>
-				DeadWaves Elementor Template Settings
+			<img src={dwe_ajax.logourl} style={{ width: 150 }} />
+			<h1 style={{ marginBottom: 50, lineHeight: '30px' }} align='center'>
+				DeadWaves <br /> Elementor Template Settings
 			</h1>
-
 			{data &&
 				Object.keys(data.post_types).map((label) => {
 					return (
@@ -95,7 +98,7 @@ function App() {
 								}}
 							>
 								<p>{label}</p>
-								<select value={formData[label]} onChange={handleChange}>
+								<select value={formData[label]} name={label} onChange={(e) => handleChange(e)}>
 									{options &&
 										options.map((o) => {
 											return <option value={o.value}>{o.label}</option>
@@ -123,80 +126,7 @@ function App() {
 			>
 				SAVE
 			</button>
-
-			<h1 style={{ marginBottom: 50 }} align='center'>
-				Help
-			</h1>
-
-			<ol style={{ width: 400 }}>
-				<li>
-					Create a custom post type.
-					<a
-						style={{ marginLeft: 10 }}
-						href='https://developer.wordpress.org/plugins/post-types/registering-custom-post-types/'
-						target='_blank'
-					>
-						Handbook
-					</a>
-					<a
-						style={{ marginLeft: 10 }}
-						href='https://wordpress.org/plugins/custom-post-type-ui/'
-						target='_blank'
-					>
-						Use a plugin
-					</a>
-				</li>
-				<li>
-					Create a template for it.
-					<a
-						style={{ marginLeft: 10 }}
-						href={dwe_ajax.home + '/wp-admin/post-new.php?post_type=elementor_library'}
-						target='_blank'
-					>
-						New Template
-					</a>
-				</li>
-				<li>Use any shortcode in your template referencing, post title, etc.</li>
-				<li>Come back to this page, and set the template for your post type.</li>
-				<li>
-					Do not forget to press <strong>SAVE</strong> and wait until it turns green.
-				</li>
-			</ol>
-
-			<p style={{ width: 400 }}>
-				<strong>NOTE:</strong> You can <strong>NOT</strong> use custom templates on post types,
-				where you would like to use the <i>Elementor</i> page builder.
-				<br />
-				<br />
-				Leave them on the <strong>Default</strong> template setting.
-				<br />
-				<br />
-				Otherwise you will get a{' '}
-				<i>
-					<strong>"Sorry, the content area was not found in your page.</strong>
-					You must call 'the_contenť function in the current template, in order for Elementor to
-					work on this page."
-				</i>{' '}
-				error.
-				<br />
-				<br />
-				If you would like to add any information I recommend to use the{' '}
-				<a href='https://wordpress.org/plugins/advanced-custom-fields/' target='_blank'>
-					Advanced Custom Fields
-				</a>{' '}
-				plugin.
-				<br />
-				<br />
-				More information on the Shortcode API:{' '}
-				<a href='https://codex.wordpress.org/Shortcode_API' target='_blank'>
-					Handbook
-				</a>
-				<br />
-				More information on the ACF Shortcodes:{' '}
-				<a href='https://www.advancedcustomfields.com/resources/shortcode/' target='_blank'>
-					Handbook
-				</a>
-			</p>
+			<Help />
 		</div>
 	)
 }

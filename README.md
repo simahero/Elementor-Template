@@ -1,11 +1,13 @@
 # DEADWAVES ELEMENTOR TEMPLATES PLUGIN
 
-## Download the release and install it to your wordpress site.
+## Install
+
+- Download the release and install it to your wordpress site.
 
 ## Build the project
 
-- Get the project
-- Go to the src/admin directory
+- Download the project
+- Open the terminal in the src/admin directory
 - Run `npm install`
 - Run `npm run build`
-- Zip the directory and install to your wordpress site.
+- ZIP the root directory and install to your wordpress site.

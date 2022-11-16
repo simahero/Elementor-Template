@@ -22,6 +22,7 @@ function prefix_enqueue_scripts()
     wp_enqueue_script('deadwaves-elementor-settings-js', plugins_url('/admin/dist/deadwaves-elementor.js', __FILE__), array(), JS_VERSION, true);
     wp_localize_script('deadwaves-elementor-settings-js', 'dwe_ajax', array(
         'apiurl' => get_home_url() . '/wp-json/deadwaves/v1/elementor',
-        'home' => home_url()
+        'home' => home_url(),
+        'logourl' => plugins_url('admin/dist/logo.png', __FILE__)
     ));
 }

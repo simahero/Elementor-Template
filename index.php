@@ -4,7 +4,7 @@
  * Plugin Name:       DeadWaves - Elementor template
  * Plugin URI:
  * Description:       
- * Version:           1.0.3
+ * Version:           1.0.4
  * Author:            Ront車 Zolt芍n
  * Author URI:        simahero.github.io
  * Text Domain:       deadwaves-elementor
@@ -19,7 +19,7 @@
 
 defined('ABSPATH') || exit;
 
-define('JS_VERSION', '1.0.3');
+define('JS_VERSION', '1.0.4');
 define('OPTION_MAP', 'deadwaves-cpt-mapping-options');
 
 require_once 'src/shortcodes/post-shortcodes.php';
