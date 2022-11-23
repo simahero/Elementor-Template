@@ -16,31 +16,78 @@ class API
 
         register_rest_route(
             $this->namespace,
-            'settings',
+            'library',
             array(
                 'methods'             => 'GET',
                 'callback'            => function (WP_REST_Request $request) {
-
-                    //get library item post type = elementor_library
-
-                    $post_types = get_post_types(
-                        //array('_builtin' => false)
-                    );
+                    $post_types = get_post_types(array(), 'objects');
                     unset($post_types['elementor_library']);
 
-                    $templates = get_posts([
+                    $pages = array();
+                    $pages['404'] = (object) array(
+                        'label' => '404'
+                    );
+
+                    $pages['privacy_policy'] = (object) array(
+                        'label' => 'Privacy policy'
+                    );
+
+                    $pages['search'] = (object) array(
+                        'label' => 'Search'
+                    );
+
+                    $pages['author'] = (object) array(
+                        'label' => 'Author'
+                    );
+
+                    // $taxonomies = get_taxonomies(array(), 'objects');
+
+                    $archives = array_filter($post_types, function ($post_type) {
+                        return $post_type->has_archive;
+                    });
+
+                    //$term each term individually
+                    //$post each post individually
+
+                    return wp_send_json_success(array(
+                        'post_types' => $post_types,
+                        'pages'      => $pages,
+                        'archives'   => $archives,
+                    ));
+                },
+                'permission_callback' => function () {
+                    return $this->permission_callback();
+                },
+            )
+        );
+
+        register_rest_route(
+            $this->namespace,
+            'templates',
+            array(
+                'methods'             => 'GET',
+                'callback'            => function (WP_REST_Request $request) {
+                    return wp_send_json_success(get_posts([
                         'post_type'        => 'elementor_library',
                         'post_status'      => 'publish',
                         'numberposts'      => -1,
                         'orderby'          => 'date',
                         'order'            => 'DESC',
-                    ]);
+                    ]));
+                },
+                'permission_callback' => function () {
+                    return $this->permission_callback();
+                },
+            )
+        );
 
-                    return wp_send_json_success(array(
-                        'post_types' => $post_types,
-                        'settings'   => get_option(OPTION_MAP),
-                        'templates'  => $templates
-                    ));
+        register_rest_route(
+            $this->namespace,
+            'settings',
+            array(
+                'methods'             => 'GET',
+                'callback'            => function (WP_REST_Request $request) {
+                    return wp_send_json_success(get_option(OPTION_MAP));
                 },
                 'permission_callback' => function () {
                     return $this->permission_callback();

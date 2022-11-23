@@ -26,7 +26,7 @@ function Help() {
 					Create an Elementor template for it.
 					<a
 						style={{ marginLeft: 10 }}
-						href={dwe_ajax.home + '/wp-admin/post-new.php?post_type=elementor_library'}
+						href={DWE.HOME_URL + '/wp-admin/post-new.php?post_type=elementor_library'}
 						target='_blank'
 					>
 						New Template

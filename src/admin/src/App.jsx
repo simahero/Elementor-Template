@@ -1,43 +1,64 @@
 import React from 'react'
+import LibraryForm from './LibraryForm'
 import Help from './Help'
 
 function App() {
-	const [data, setData] = React.useState()
-	const [formData, setFormData] = React.useState({})
-	const [options, setOptions] = React.useState([])
+	const [library, setLibrary] = React.useState()
+	const [templates, setTemplates] = React.useState()
+	const [settings, setSettings] = React.useState()
 
 	const [networkIndicator, setNetworkIndicator] = React.useState()
 
-	const url = dwe_ajax.apiurl
+	const library_structure = { post_types: {}, taxonomies: {}, pages: {}, archives: {}, other: {} }
 
-	React.useEffect(() => {
-		fetch(`${url}/settings`)
+	const getLibrary = () => {
+		fetch(`${DWE.API_URL}/library`)
 			.then((response) => response.json())
 			.then((response) => {
-				const data = response.data
-
-				data.settings = JSON.parse(data.settings)
-				const newFormData = {}
-				Object.keys(data.post_types).forEach((key) => {
-					newFormData[key] = data.settings[key] ? data.settings[key] : -1
-				})
-				setFormData(newFormData)
-
-				var newOptions = []
-				data.templates.forEach((t) => {
-					newOptions.push({ value: t.ID, label: t.post_title })
-				})
-				newOptions.push({ value: -1, label: 'Default' })
-				setOptions(newOptions)
-
-				setData(data)
+				setLibrary(response.data)
 			})
 			.catch((error) => console.error(error))
+	}
+
+	const getTemplates = () => {
+		fetch(`${DWE.API_URL}/templates`)
+			.then((response) => response.json())
+			.then((response) => {
+				var template_elements = response.data
+				template_elements.push({ ID: -1, post_name: 'Default' })
+				setTemplates(template_elements)
+			})
+			.catch((error) => console.error(error))
+	}
+
+	const getSettings = () => {
+		if (!library || library.length == 0) return
+
+		fetch(`${DWE.API_URL}/settings`)
+			.then((response) => response.json())
+			.then((response) => {
+				const data = JSON.parse(response.data)
+				const newSettings = Object.assign(library_structure, data)
+				Object.keys(library).forEach((library_type) => {
+					Object.keys(library[library_type]).forEach((key) => {
+						newSettings[library_type][key] = newSettings[library_type][key]
+							? newSettings[library_type][key]
+							: -1
+					})
+				})
+				setSettings(newSettings)
+			})
+			.catch((error) => console.error(error))
+	}
+
+	React.useEffect(() => {
+		getLibrary()
+		getTemplates()
 	}, [])
 
 	React.useEffect(() => {
-		console.log(options)
-	}, [options])
+		getSettings()
+	}, [library])
 
 	React.useEffect(() => {
 		setTimeout(() => {
@@ -45,20 +66,19 @@ function App() {
 		}, 2000)
 	}, [networkIndicator])
 
-	const handleChange = (evt) => {
-		console.log('triggered')
-		console.log(evt)
+	const handleChange = (evt, library_type) => {
 		const value = parseInt(evt.target.value)
-		setFormData({
-			...formData,
-			[evt.target.name]: value,
+		setSettings((settings) => {
+			const copy = Object.assign(library_structure, settings)
+			copy[library_type][evt.target.name] = value
+			return copy
 		})
 	}
 
-	const handleSubmit = (evt) => {
-		fetch(`${url}/settings`, {
+	const handleSubmit = () => {
+		fetch(`${DWE.API_URL}/settings`, {
 			method: 'POST',
-			body: JSON.stringify(formData),
+			body: JSON.stringify(settings),
 		})
 			.then(() => {
 				setNetworkIndicator('#63ff82')
@@ -80,31 +100,24 @@ function App() {
 				padding: 40,
 			}}
 		>
-			<img src={dwe_ajax.logourl} style={{ width: 150 }} />
+			<img src={DWE.LOGO_URL} style={{ width: 150 }} />
 			<h1 style={{ marginBottom: 50, lineHeight: '30px' }} align='center'>
 				DeadWaves <br /> Elementor Template Settings
 			</h1>
-			{data &&
-				Object.keys(data.post_types).map((label) => {
+			{library &&
+				templates &&
+				settings &&
+				Object.keys(library).map((library_type) => {
 					return (
-						<div key={label}>
-							<div
-								style={{
-									display: 'flex',
-									alignItems: 'center',
-									justifyContent: 'space-between',
-									width: 400,
-									marginBottom: 10,
-								}}
-							>
-								<p>{label}</p>
-								<select value={formData[label]} name={label} onChange={(e) => handleChange(e)}>
-									{options &&
-										options.map((o) => {
-											return <option value={o.value}>{o.label}</option>
-										})}
-								</select>
-							</div>
+						<div key={library_type}>
+							<h3 style={{ textTransform: 'capitalize' }}>{library_type}</h3>
+							<LibraryForm
+								library={library}
+								templates={templates}
+								settings={settings}
+								library_type={library_type}
+								handleChange={handleChange}
+							/>
 						</div>
 					)
 				})}
