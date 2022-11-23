@@ -2,9 +2,9 @@
 
 /**
  * Plugin Name:       DeadWaves - Elementor template
- * Plugin URI:
+ * Plugin URI:        Elementor Page Builder
  * Description:       
- * Version:           1.0.4
+ * Version:           1.0.5
  * Author:            Ront車 Zolt芍n
  * Author URI:        simahero.github.io
  * Text Domain:       deadwaves-elementor
