@@ -9,6 +9,8 @@ class API
     {
         $this->namespace = 'deadwaves/v1/elementor';
         $this->text_domain = 'deadwaves_elementor';
+
+        add_action('rest_api_init', [$this, 'register_rest_routes']);
     }
 
     function register_rest_routes()
@@ -22,6 +24,7 @@ class API
                 'callback'            => function (WP_REST_Request $request) {
                     $post_types = get_post_types(array(), 'objects');
                     unset($post_types['elementor_library']);
+                    unset($post_types['elementor-hf']);
 
                     $pages = array();
                     $pages['404'] = (object) array(
@@ -117,3 +120,5 @@ class API
         // return current_user_can('administrator');
     }
 }
+
+new API();

@@ -9,6 +9,11 @@ add_filter('template_include', function ($template) {
     $query_type = NULL;
     $query = NULL;
 
+    if (is_admin()) return $template;
+
+    if (get_post_type(get_the_ID()) == "elementor_library") return $template;
+    if (get_post_type(get_the_ID()) == "elementor-hf") return $template;
+
     if (is_404()) {
         $query_type = 'pages';
         $query = '404';
@@ -60,5 +65,7 @@ add_filter('template_include', function ($template) {
         // the_content();
         echo Plugin::instance()->frontend->get_builder_content_for_display($template_id);
         get_footer();
+    } else {
+        return $template;
     }
 }, 99);

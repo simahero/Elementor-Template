@@ -2,8 +2,8 @@
 
 /**
  * Plugin Name:       DeadWaves - Elementor template
- * Plugin URI:        Elementor Page Builder
- * Description:       
+ * Plugin URI:        
+ * Description:       Elementor Page Builder
  * Version:           1.0.5
  * Author:            Ront車 Zolt芍n
  * Author URI:        simahero.github.io
@@ -29,5 +29,3 @@ require_once 'src/shortcodes/conditional-shortcode.php';
 require_once 'src/elementor-template-api.php';
 require_once 'src/elementor-template-settings.php';
 require_once 'src/elementor-template.php';
-
-add_action('rest_api_init', array(new API(), 'register_rest_routes'));
